@@ -11,6 +11,7 @@ services:
     environment:
       - POSTGRES_USER=proyecto2
       - POSTGRES_PASSWORD=proyecto2
+      - POSTGRES_DB=proyecto2db
     ports:
       - 5432:5432
 volumes:
