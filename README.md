@@ -1,2 +1,3 @@
-# Proyecto1_BackEnd
-Odontología
+# Proyecto2_BackEnd
+Plataforma de Reservas
+
