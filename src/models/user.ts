@@ -10,7 +10,7 @@ import Service from './service'
 import UserServiceFavorite from './userservicesfavorites'
 import ClientFollowedCompany from './clientfollowedcompany'
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+export interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 
 @Table({
   timestamps: true,

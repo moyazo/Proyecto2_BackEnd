@@ -5,6 +5,7 @@ import bodyParser from 'body-parser'
 // @ts-ignore
 import dotenv from 'dotenv'
 import db from './src/models/index'
+import userRoutes from './src/routes/user'
 
 const startApp = async () => {
   const app: Express = express()
@@ -17,6 +18,7 @@ const startApp = async () => {
       extended: true,
     })
   )
+  app.use('/users', userRoutes)
 
   try {
     // @ts-ignore
