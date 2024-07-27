@@ -20,7 +20,7 @@ const startApp = async () => {
 
   try {
     // @ts-ignore
-    db.sequelize.beforeSync({ force: false })
+    db.beforeSync({ force: false })
     app.listen(port, () => {
       console.log('APP running on port ' + port)
     })

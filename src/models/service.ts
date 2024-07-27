@@ -9,9 +9,8 @@ import {
   BelongsToMany,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
-import UserServiceFavorite from './userservicesfavorites'
 import User from './user'
-// TODO: RELATION WITH OTHER MODELS
+import UserServiceFavorite from "./userservicesfavorites";
 
 interface ServiceCreationAttributes extends Optional<ServiceAttributes, 'id'> {}
 
@@ -90,8 +89,9 @@ class Service extends Model<ServiceAttributes, ServiceCreationAttributes> {
   @UpdatedAt
   declare updatedAt: Date
 
-  @BelongsToMany(() => User, () => UserServiceFavorite)
-  ServiceFavUser!: User[]
+  //@ts-ignore
+  @BelongsToMany(() => User, () => ServiceFavUser)
+  declare ServiceFavUser!: UserServiceFavorite[]
 }
 
 export default Service
