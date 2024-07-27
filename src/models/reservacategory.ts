@@ -1,4 +1,4 @@
-import {ReservaCategoryAttributes} from '../types/models'
+import { ReservaCategoryAttributes } from '../types/models'
 import {
   Table,
   Column,
@@ -9,19 +9,22 @@ import {
   BelongsToMany,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
-import Category from "./category";
-import Reserva from "./reserva";
+import Category from './category'
+import Reserva from './reserva'
 // TODO: RELATION WITH OTHER MODELS
 
-interface ReservaCategoryCreationAttributes extends Optional<ReservaCategoryAttributes, 'id'> {}
+interface ReservaCategoryCreationAttributes
+  extends Optional<ReservaCategoryAttributes, 'id'> {}
 
 @Table({
   timestamps: true,
   tableName: 'Categories',
   modelName: 'Category',
 })
-
-class ReservaCategory extends Model<ReservaCategoryAttributes,ReservaCategoryCreationAttributes> {
+class ReservaCategory extends Model<
+  ReservaCategoryAttributes,
+  ReservaCategoryCreationAttributes
+> {
   // @ts-ignore
   @Column({
     allowNull: false,
@@ -70,6 +73,5 @@ class ReservaCategory extends Model<ReservaCategoryAttributes,ReservaCategoryCre
   /*@BelongsToMany(() => Character, () => UserFavoritesCharacter)
   userFavChar!: Character[]*/
 }
-
 
 export default ReservaCategory

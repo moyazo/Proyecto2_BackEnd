@@ -1,4 +1,4 @@
-import {ServiceCategoryAttributes} from '../types/models'
+import { ServiceCategoryAttributes } from '../types/models'
 import {
   Table,
   Column,
@@ -9,20 +9,23 @@ import {
   BelongsToMany,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
-import Category from "./category";
-import Reserva from "./reserva";
-import Service from "./service";
+import Category from './category'
+import Reserva from './reserva'
+import Service from './service'
 // TODO: RELATION WITH OTHER MODELS
 
-interface ServiceCategoryCreationAttributes extends Optional<ServiceCategoryAttributes, 'id'> {}
+interface ServiceCategoryCreationAttributes
+  extends Optional<ServiceCategoryAttributes, 'id'> {}
 
 @Table({
   timestamps: true,
   tableName: 'Categories',
   modelName: 'Category',
 })
-
-class ServiceCategory extends Model<ServiceCategoryAttributes,ServiceCategoryCreationAttributes> {
+class ServiceCategory extends Model<
+  ServiceCategoryAttributes,
+  ServiceCategoryCreationAttributes
+> {
   // @ts-ignore
   @Column({
     allowNull: false,
@@ -68,6 +71,5 @@ class ServiceCategory extends Model<ServiceCategoryAttributes,ServiceCategoryCre
   @UpdatedAt
   declare updatedAt: Date
 }
-
 
 export default ServiceCategory

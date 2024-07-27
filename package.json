@@ -6,6 +6,12 @@
   "repository": "https://github.com/moyazo/Proyecto2_BackEnd.git",
   "author": "Manuel Moya Vadillo <manuel.moyavadillo2@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon app.ts",
+    "prettier": "prettier --write .",
+    "migrate": "npx sequelize-cli db:migrate",
+    "undoAll": "npx sequelize-cli db:migrate:undo:all"
+  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",

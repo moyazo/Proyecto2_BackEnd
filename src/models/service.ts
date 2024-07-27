@@ -1,4 +1,4 @@
-import {ServiceAttributes} from '../types/models'
+import { ServiceAttributes } from '../types/models'
 import {
   Table,
   Column,
@@ -9,8 +9,8 @@ import {
   BelongsToMany,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
-import UserServiceFavorite from "./userservicesfavorites";
-import User from "./user";
+import UserServiceFavorite from './userservicesfavorites'
+import User from './user'
 // TODO: RELATION WITH OTHER MODELS
 
 interface ServiceCreationAttributes extends Optional<ServiceAttributes, 'id'> {}
@@ -20,9 +20,8 @@ interface ServiceCreationAttributes extends Optional<ServiceAttributes, 'id'> {}
   tableName: 'Services',
   modelName: 'Service',
 })
-
-class Service extends Model<ServiceAttributes,ServiceCreationAttributes> {
-// @ts-ignore
+class Service extends Model<ServiceAttributes, ServiceCreationAttributes> {
+  // @ts-ignore
   @Column({
     allowNull: false,
     type: DataType.UUID,
@@ -57,32 +56,28 @@ class Service extends Model<ServiceAttributes,ServiceCreationAttributes> {
 
   // @ts-ignore
   @ForeignKey(() => User)
-  @Column(
-      {
-        type: DataType.UUID,
-        references: {
-          model: 'User',
-          key: 'id',
-        },
-        allowNull: false
-      }
-  )
+  @Column({
+    type: DataType.UUID,
+    references: {
+      model: 'User',
+      key: 'id',
+    },
+    allowNull: false,
+  })
   // @ts-ignore
   @HasMany(() => User, companyID)
   declare companyID: string
 
   // @ts-ignore
   @ForeignKey(() => Category)
-  @Column(
-      {
-        type: DataType.UUID,
-        references: {
-          model: 'Category',
-          key: 'id',
-        },
-        allowNull: false
-      }
-  )
+  @Column({
+    type: DataType.UUID,
+    references: {
+      model: 'Category',
+      key: 'id',
+    },
+    allowNull: false,
+  })
   // @ts-ignore
   @HasMany(() => Category, categoryID)
   declare categoryID: string
@@ -98,6 +93,5 @@ class Service extends Model<ServiceAttributes,ServiceCreationAttributes> {
   @BelongsToMany(() => User, () => UserServiceFavorite)
   ServiceFavUser!: User[]
 }
-
 
 export default Service

@@ -1,4 +1,4 @@
-import {ReservaAttributes} from '../types/models'
+import { ReservaAttributes } from '../types/models'
 import {
   Table,
   Column,
@@ -6,11 +6,12 @@ import {
   DataType,
   CreatedAt,
   UpdatedAt,
-  BelongsToMany, HasMany,
+  BelongsToMany,
+  HasMany,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
-import User from "./user";
-import Category from "./category";
+import User from './user'
+import Category from './category'
 // TODO: RELATION WITH OTHER MODELS
 
 interface ReservaCreationAttributes extends Optional<ReservaAttributes, 'id'> {}
@@ -20,8 +21,7 @@ interface ReservaCreationAttributes extends Optional<ReservaAttributes, 'id'> {}
   tableName: 'Reservas',
   modelName: 'Reserva',
 })
-
-class Reserva extends Model<ReservaAttributes,ReservaCreationAttributes> {
+class Reserva extends Model<ReservaAttributes, ReservaCreationAttributes> {
   // @ts-ignore
   @Column({
     allowNull: false,
@@ -57,48 +57,42 @@ class Reserva extends Model<ReservaAttributes,ReservaCreationAttributes> {
 
   // @ts-ignore
   @ForeignKey(() => User)
-  @Column(
-      {
-        type: DataType.UUID,
-        references: {
-          model: 'User',
-          key: 'id',
-        },
-        allowNull: false
-      }
-  )
+  @Column({
+    type: DataType.UUID,
+    references: {
+      model: 'User',
+      key: 'id',
+    },
+    allowNull: false,
+  })
   // @ts-ignore
   @HasMany(() => User, companyID)
   declare companyID: string
 
   // @ts-ignore
   @ForeignKey(() => User)
-  @Column(
-      {
-        type: DataType.UUID,
-        references: {
-          model: 'User',
-          key: 'id',
-        },
-        allowNull: false
-      }
-  )
+  @Column({
+    type: DataType.UUID,
+    references: {
+      model: 'User',
+      key: 'id',
+    },
+    allowNull: false,
+  })
   // @ts-ignore
   @HasMany(() => User, clientID)
   declare clientID: string
 
   // @ts-ignore
   @ForeignKey(() => Category)
-  @Column(
-      {
-        type: DataType.UUID,
-        references: {
-          model: 'Category',
-          key: 'id',
-        },
-        allowNull: false
-      }
-  )
+  @Column({
+    type: DataType.UUID,
+    references: {
+      model: 'Category',
+      key: 'id',
+    },
+    allowNull: false,
+  })
   // @ts-ignore
   @HasMany(() => Category, categoryID)
   declare categoryID: string
@@ -110,8 +104,6 @@ class Reserva extends Model<ReservaAttributes,ReservaCreationAttributes> {
   // @ts-ignore
   @UpdatedAt
   declare updatedAt: Date
-
-
 }
 
 export default Reserva

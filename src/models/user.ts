@@ -7,13 +7,13 @@ import {
   CreatedAt,
   UpdatedAt,
   BelongsToMany,
-    HasMany
+  HasMany,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
-import Service from "./service";
-import UserServiceFavorite from "./userservicesfavorites";
-import ClientFollowedCompany from "./clientfollowedcompany";
-import Reserva from "./reserva";
+import Service from './service'
+import UserServiceFavorite from './userservicesfavorites'
+import ClientFollowedCompany from './clientfollowedcompany'
+import Reserva from './reserva'
 // TODO: RELATION WITH OTHER MODELS
 
 interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
@@ -23,7 +23,7 @@ interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
   tableName: 'Users',
   modelName: 'User',
 })
-class User extends Model<UserAttributes,UserCreationAttributes> {
+class User extends Model<UserAttributes, UserCreationAttributes> {
   // @ts-ignore
   @Column({
     allowNull: false,
@@ -83,6 +83,5 @@ class User extends Model<UserAttributes,UserCreationAttributes> {
   @BelongsToMany(() => User, () => ClientFollowedCompany)
   clientCompanyFollowed!: User[]
 }
-
 
 export default User

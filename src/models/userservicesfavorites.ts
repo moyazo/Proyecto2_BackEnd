@@ -1,4 +1,4 @@
-import {UserServicesFavoritesAttributes} from '../types/models'
+import { UserServicesFavoritesAttributes } from '../types/models'
 import {
   Table,
   Column,
@@ -9,18 +9,21 @@ import {
   BelongsToMany,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
-import Service from "./service";
+import Service from './service'
 // TODO: RELATION WITH OTHER MODELS
 
-interface UserServicesFavoritesCreationAttributes extends Optional<UserServicesFavoritesAttributes, 'id'> {}
+interface UserServicesFavoritesCreationAttributes
+  extends Optional<UserServicesFavoritesAttributes, 'id'> {}
 
 @Table({
   timestamps: true,
   tableName: 'UserServicesFavorites',
   modelName: 'UserServiceFavorite',
 })
-
-export class UserServiceFavorite extends Model<UserServicesFavoritesAttributes,UserServicesFavoritesCreationAttributes> {
+export class UserServiceFavorite extends Model<
+  UserServicesFavoritesAttributes,
+  UserServicesFavoritesCreationAttributes
+> {
   // @ts-ignore
   @Column({
     allowNull: false,
@@ -31,32 +34,28 @@ export class UserServiceFavorite extends Model<UserServicesFavoritesAttributes,U
     onUpdate: 'CASCADE',
   })
   declare id: string
-// @ts-ignore
+  // @ts-ignore
   @ForeignKey(() => User)
-  @Column(
-      {
-        type: DataType.UUID,
-        references: {
-          model: 'User',
-          key: 'id',
-        },
-        allowNull: false
-      }
-  )
+  @Column({
+    type: DataType.UUID,
+    references: {
+      model: 'User',
+      key: 'id',
+    },
+    allowNull: false,
+  })
   declare clientID: string
 
   // @ts-ignore
   @ForeignKey(() => Service)
-  @Column(
-      {
-        type: DataType.UUID,
-        references: {
-          model: 'Service',
-          key: 'id',
-        },
-        allowNull: false
-      }
-  )
+  @Column({
+    type: DataType.UUID,
+    references: {
+      model: 'Service',
+      key: 'id',
+    },
+    allowNull: false,
+  })
   declare serviceID: string
 
   // @ts-ignore
@@ -66,8 +65,6 @@ export class UserServiceFavorite extends Model<UserServicesFavoritesAttributes,U
   // @ts-ignore
   @UpdatedAt
   declare updatedAt: Date
-
 }
-
 
 export default UserServiceFavorite
