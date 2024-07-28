@@ -19,8 +19,8 @@ interface ReservaCategoryCreationAttributes
 
 @Table({
   timestamps: true,
-  tableName: 'Categories',
-  modelName: 'Category',
+  tableName: 'ReservaCategories',
+  modelName: 'ReservaCategory',
 })
 class ReservaCategory extends Model<
   ReservaCategoryAttributes,

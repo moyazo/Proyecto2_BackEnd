@@ -29,7 +29,6 @@ class Category extends Model<CategoryAttributes, CategoryCreationAttributes> {
 
   @Column({
     type: DataType.STRING,
-    unique: true,
     allowNull: false,
   })
   declare name: string

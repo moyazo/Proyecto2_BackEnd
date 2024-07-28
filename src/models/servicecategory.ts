@@ -20,8 +20,8 @@ interface ServiceCategoryCreationAttributes
 
 @Table({
   timestamps: true,
-  tableName: 'Categories',
-  modelName: 'Category',
+  tableName: 'ServiceCategories',
+  modelName: 'ServiceCategory',
 })
 class ServiceCategory extends Model<
   ServiceCategoryAttributes,

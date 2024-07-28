@@ -34,37 +34,27 @@ interface ServiceAttributes {
   available: string
   categoryID: string
   companyID: string
+  createdAt: Date;
+  updatedAt: Date;
 }
+
 
 interface ReservaType {
   id: string
-  name: string
-  description: string
-  available: string
-  categoryID: string
-  companyID: string
+  serviceID: string
   clientID: string
+  categoryID: string
 }
 
 interface ReservaAttributes {
   id: string
-  name: string
-  description: string
-  available: string
-  categoryID: string
-  companyID: string
+  serviceID: string
   clientID: string
+  categoryID: string
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface ReservaType {
-  id: string
-  name: string
-  description: string
-  available: string
-  categoryID: string
-  companyID: string
-  clientID: string
-}
 
 interface CategoryType {
   id: string
@@ -74,19 +64,10 @@ interface CategoryType {
 interface CategoryAttributes {
   id: string
   name: string
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface SubCategoryType {
-  id: string
-  name: string
-  categoryID: string
-}
-
-interface SubCategoryAttributes {
-  id: string
-  name: string
-  categoryID: string
-}
 
 interface ClientFollowedCompanyType {
   id: string
@@ -98,6 +79,8 @@ interface ClientFollowedCompanyAttributes {
   id: string
   clientID: string
   companyID: string
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface UserServicesFavoritesType {
@@ -110,6 +93,8 @@ interface UserServicesFavoritesAttributes {
   id: string
   clientID: string
   serviceID: string
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface ReservaCategoryType {
@@ -122,6 +107,8 @@ interface ReservaCategoryAttributes {
   id: string
   clientID: string
   serviceID: string
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface ServiceCategoryType {
@@ -134,6 +121,8 @@ interface ServiceCategoryAttributes {
   id: string
   clientID: string
   serviceID: string
+  createdAt: Date;
+  updatedAt: Date;
 }
 export {
   UserType,

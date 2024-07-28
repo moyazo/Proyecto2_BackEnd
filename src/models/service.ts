@@ -80,8 +80,6 @@ class Service extends Model<ServiceAttributes, ServiceCreationAttributes> {
     },
     allowNull: false,
   })
-
-
   declare categoryID: string
 
 

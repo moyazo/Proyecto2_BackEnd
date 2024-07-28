@@ -7,6 +7,10 @@ import dotenv from 'dotenv'
 import db from './src/models/index'
 import authRoutes from './src/routes/auth'
 import userRoutes from './src/routes/user'
+import categoriesRoutes from './src/routes/categories'
+import servicesRoutes from './src/routes/services'
+import reservasRoutes from './src/routes/reservas'
+import ensureAuthentication from './src/middleware/auth'
 
 const startApp = async () => {
   const app: Express = express()
@@ -19,8 +23,13 @@ const startApp = async () => {
       extended: true,
     })
   )
+  app.use(ensureAuthentication)
   app.use('/auth', authRoutes)
   app.use('/users', userRoutes)
+  app.use('/categories', categoriesRoutes)
+  app.use('/services', servicesRoutes)
+  app.use('/reservas', reservasRoutes)
+
 
   try {
     // @ts-ignore

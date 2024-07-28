@@ -1,4 +1,5 @@
-import {UserType} from "./models";
+import {CategoryType, ServiceType, UserType} from "./models";
+import Reserva from "../models/reserva";
 
 interface UserControllerReturn {
     status: boolean,
@@ -11,6 +12,54 @@ interface UserControllerReturnArray {
     message?: string
 }
 interface UserControllerReturnDeleted {
+    status: boolean,
+    data: number,
+    message?: string
+}
+
+interface CategoryControllerReturn {
+    status: boolean,
+    data: CategoryType,
+    message?: string
+}
+interface CategoryControllerReturnArray {
+    status: boolean,
+    data: CategoryType[],
+    message?: string
+}
+interface CategoryControllerReturnDeleted {
+    status: boolean,
+    data: number,
+    message?: string
+}
+
+interface ServiceControllerReturn {
+    status: boolean,
+    data: ServiceType,
+    message?: string
+}
+interface ServiceControllerReturnArray {
+    status: boolean,
+    data: ServiceType[],
+    message?: string
+}
+interface ServiceControllerReturnDeleted {
+    status: boolean,
+    data: number,
+    message?: string
+}
+
+interface ReservaControllerReturn {
+    status: boolean,
+    data: ReservaType,
+    message?: string
+}
+interface ReservaControllerReturnArray {
+    status: boolean,
+    data: ReservaType[],
+    message?: string
+}
+interface ReservaControllerReturnDeleted {
     status: boolean,
     data: number,
     message?: string
