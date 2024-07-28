@@ -24,7 +24,7 @@ const sequelize = new Sequelize({
 })
 
 sequelize.addModels([
-  Category,
+    Category,
     ClientFollowedCompany,
     Reserva,
     ReservaCategory,

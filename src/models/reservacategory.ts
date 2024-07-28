@@ -6,11 +6,12 @@ import {
   DataType,
   CreatedAt,
   UpdatedAt,
-  BelongsToMany,
+  BelongsToMany, ForeignKey, BelongsTo,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
 import Category from './category'
 import Reserva from './reserva'
+import User from "./user";
 // TODO: RELATION WITH OTHER MODELS
 
 interface ReservaCategoryCreationAttributes
@@ -25,7 +26,7 @@ class ReservaCategory extends Model<
   ReservaCategoryAttributes,
   ReservaCategoryCreationAttributes
 > {
-  // @ts-ignore
+
   @Column({
     allowNull: false,
     type: DataType.UUID,
@@ -36,42 +37,34 @@ class ReservaCategory extends Model<
   })
   declare id: string
 
-  // @ts-ignore
+
   @ForeignKey(() => Category)
   @Column({
     allowNull: false,
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
-    references: {
-      model: 'Category',
-      key: 'id',
-    },
   })
-  declare categoryID!: string
+  declare categoryID: string
 
-  // @ts-ignore
   @ForeignKey(() => Reserva)
   @Column({
     allowNull: false,
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
-    references: {
-      model: 'Reserva',
-      key: 'id',
-    },
   })
-  declare reservaID!: string
+  declare reservaID: string
 
-  // @ts-ignore
   @CreatedAt
   declare createdAt: Date
 
-  // @ts-ignore
   @UpdatedAt
   declare updatedAt: Date
 
-  /*@BelongsToMany(() => Character, () => UserFavoritesCharacter)
-  userFavChar!: Character[]*/
+  @BelongsTo(() => Category)
+  category!: Category
+
+  @BelongsTo(() => Reserva)
+  reserva!: Reserva
 }
 
 export default ReservaCategory

@@ -12,22 +12,10 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-      },
-      available: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-      },
-      companyID: {
+      serviceID: {
         type: DataType.UUID,
         references: {
-          model: 'Users',
+          model: 'Services',
           key: 'id',
         },
         allowNull: false,

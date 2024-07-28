@@ -6,10 +6,11 @@ import {
   DataType,
   CreatedAt,
   UpdatedAt,
-  BelongsToMany,
+  BelongsToMany, ForeignKey,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
 import Service from './service'
+import User from "./user";
 // TODO: RELATION WITH OTHER MODELS
 
 interface UserServicesFavoritesCreationAttributes
@@ -24,7 +25,7 @@ export class UserServiceFavorite extends Model<
   UserServicesFavoritesAttributes,
   UserServicesFavoritesCreationAttributes
 > {
-  // @ts-ignore
+
   @Column({
     allowNull: false,
     type: DataType.UUID,
@@ -34,7 +35,7 @@ export class UserServiceFavorite extends Model<
     onUpdate: 'CASCADE',
   })
   declare id: string
-  // @ts-ignore
+
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
@@ -46,7 +47,7 @@ export class UserServiceFavorite extends Model<
   })
   declare clientID: string
 
-  // @ts-ignore
+
   @ForeignKey(() => Service)
   @Column({
     type: DataType.UUID,
@@ -58,11 +59,9 @@ export class UserServiceFavorite extends Model<
   })
   declare serviceID: string
 
-  // @ts-ignore
   @CreatedAt
   declare createdAt: Date
 
-  // @ts-ignore
   @UpdatedAt
   declare updatedAt: Date
 }

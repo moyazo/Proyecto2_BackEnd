@@ -6,11 +6,15 @@ import {
   DataType,
   CreatedAt,
   UpdatedAt,
-  BelongsToMany,
+  BelongsToMany, ForeignKey, HasMany, BelongsTo,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
 import User from './user'
 import UserServiceFavorite from "./userservicesfavorites";
+import Category from "./category";
+import ServiceCategory from "./servicecategory";
+import Userservicesfavorites from "./userservicesfavorites";
+import Reserva from "./reserva";
 
 interface ServiceCreationAttributes extends Optional<ServiceAttributes, 'id'> {}
 
@@ -20,7 +24,7 @@ interface ServiceCreationAttributes extends Optional<ServiceAttributes, 'id'> {}
   modelName: 'Service',
 })
 class Service extends Model<ServiceAttributes, ServiceCreationAttributes> {
-  // @ts-ignore
+
   @Column({
     allowNull: false,
     type: DataType.UUID,
@@ -31,7 +35,7 @@ class Service extends Model<ServiceAttributes, ServiceCreationAttributes> {
   })
   declare id: string
 
-  // @ts-ignore
+
   @Column({
     type: DataType.STRING,
     unique: true,
@@ -39,21 +43,21 @@ class Service extends Model<ServiceAttributes, ServiceCreationAttributes> {
   })
   declare name: string
 
-  // @ts-ignore
+
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   declare description: string
 
-  // @ts-ignore
+
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   declare available: string
 
-  // @ts-ignore
+
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
@@ -63,11 +67,10 @@ class Service extends Model<ServiceAttributes, ServiceCreationAttributes> {
     },
     allowNull: false,
   })
-  // @ts-ignore
-  @HasMany(() => User, companyID)
   declare companyID: string
 
-  // @ts-ignore
+
+
   @ForeignKey(() => Category)
   @Column({
     type: DataType.UUID,
@@ -77,21 +80,30 @@ class Service extends Model<ServiceAttributes, ServiceCreationAttributes> {
     },
     allowNull: false,
   })
-  // @ts-ignore
-  @HasMany(() => Category, categoryID)
+
+
   declare categoryID: string
 
-  // @ts-ignore
+
   @CreatedAt
   declare createdAt: Date
 
-  // @ts-ignore
+
   @UpdatedAt
   declare updatedAt: Date
 
-  //@ts-ignore
-  @BelongsToMany(() => User, () => ServiceFavUser)
-  declare ServiceFavUser!: UserServiceFavorite[]
+  @HasMany(() => Reserva)
+  reservas!: Reserva
+
+  @BelongsTo(() => User)
+  user!: User
+
+  @BelongsToMany(() => User, () => Userservicesfavorites)
+  serviceFavUser!: Service[]
+
+  @BelongsToMany(() => Category, () => ServiceCategory)
+  serviceCategories!: Category[];
+
 }
 
 export default Service

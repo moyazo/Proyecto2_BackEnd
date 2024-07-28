@@ -6,12 +6,13 @@ import {
   DataType,
   CreatedAt,
   UpdatedAt,
-  BelongsToMany,
+  BelongsToMany, ForeignKey, BelongsTo,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
 import Category from './category'
 import Reserva from './reserva'
 import Service from './service'
+import User from "./user";
 // TODO: RELATION WITH OTHER MODELS
 
 interface ServiceCategoryCreationAttributes
@@ -26,7 +27,7 @@ class ServiceCategory extends Model<
   ServiceCategoryAttributes,
   ServiceCategoryCreationAttributes
 > {
-  // @ts-ignore
+
   @Column({
     allowNull: false,
     type: DataType.UUID,
@@ -37,39 +38,35 @@ class ServiceCategory extends Model<
   })
   declare id: string
 
-  // @ts-ignore
+
   @ForeignKey(() => Category)
   @Column({
     allowNull: false,
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
-    references: {
-      model: 'Category',
-      key: 'id',
-    },
   })
-  declare categoryID!: string
+  declare categoryID: string
 
-  // @ts-ignore
   @ForeignKey(() => Service)
   @Column({
     allowNull: false,
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
-    references: {
-      model: 'Service',
-      key: 'id',
-    },
   })
-  declare serviceID!: string
+  declare serviceID: string
 
-  // @ts-ignore
   @CreatedAt
   declare createdAt: Date
 
-  // @ts-ignore
   @UpdatedAt
   declare updatedAt: Date
+
+
+  @BelongsTo(() => Service)
+  service!: Service
+
+  @BelongsTo(() => Category)
+  category!: Category
 }
 
 export default ServiceCategory

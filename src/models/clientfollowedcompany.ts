@@ -1,5 +1,5 @@
 import { ClientFollowedCompanyAttributes } from '../types/models'
-import { Table, Model, DataType } from 'sequelize-typescript'
+import {Table, Model, DataType, ForeignKey, Column, CreatedAt, UpdatedAt, BelongsTo} from 'sequelize-typescript'
 import { Optional } from 'sequelize'
 import User from './user'
 // TODO: RELATION WITH OTHER MODELS
@@ -27,7 +27,6 @@ class ClientFollowedCompany extends Model<
   })
   declare id: string
 
-  // @ts-ignore
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
@@ -39,7 +38,6 @@ class ClientFollowedCompany extends Model<
   })
   declare clientID: string
 
-  // @ts-ignore
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
@@ -50,13 +48,19 @@ class ClientFollowedCompany extends Model<
     allowNull: false,
   })
   declare companyID: string
-  // @ts-ignore
+
   @CreatedAt
   declare createdAt: Date
 
-  // @ts-ignore
+
   @UpdatedAt
   declare updatedAt: Date
+
+  @BelongsTo(() => User,'clientID')
+  client!: User
+
+  @BelongsTo(() => User,'companyID')
+  company!: User
 }
 
 export default ClientFollowedCompany

@@ -7,11 +7,14 @@ import {
   CreatedAt,
   UpdatedAt,
   BelongsToMany,
-  HasMany,
+  HasMany, ForeignKey, BelongsTo,
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
 import User from './user'
 import Category from './category'
+import Service from "./service";
+import ServiceCategory from "./servicecategory";
+import ReservaCategory from "./reservacategory";
 // TODO: RELATION WITH OTHER MODELS
 
 interface ReservaCreationAttributes extends Optional<ReservaAttributes, 'id'> {}
@@ -22,7 +25,7 @@ interface ReservaCreationAttributes extends Optional<ReservaAttributes, 'id'> {}
   modelName: 'Reserva',
 })
 class Reserva extends Model<ReservaAttributes, ReservaCreationAttributes> {
-  // @ts-ignore
+
   @Column({
     allowNull: false,
     type: DataType.UUID,
@@ -33,29 +36,17 @@ class Reserva extends Model<ReservaAttributes, ReservaCreationAttributes> {
   })
   declare id: string
 
-  // @ts-ignore
+  @ForeignKey(() => Service)
   @Column({
-    type: DataType.STRING,
-    unique: true,
+    type: DataType.UUID,
+    references: {
+      model: 'Service',
+      key: 'id',
+    },
     allowNull: false,
   })
-  declare name: string
+  declare serviceID: string
 
-  // @ts-ignore
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  declare description: string
-
-  // @ts-ignore
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  declare available: string
-
-  // @ts-ignore
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
@@ -65,25 +56,9 @@ class Reserva extends Model<ReservaAttributes, ReservaCreationAttributes> {
     },
     allowNull: false,
   })
-  // @ts-ignore
-  @HasMany(() => User, companyID)
-  declare companyID: string
-
-  // @ts-ignore
-  @ForeignKey(() => User)
-  @Column({
-    type: DataType.UUID,
-    references: {
-      model: 'User',
-      key: 'id',
-    },
-    allowNull: false,
-  })
-  // @ts-ignore
-  @HasMany(() => User, clientID)
   declare clientID: string
 
-  // @ts-ignore
+
   @ForeignKey(() => Category)
   @Column({
     type: DataType.UUID,
@@ -93,17 +68,28 @@ class Reserva extends Model<ReservaAttributes, ReservaCreationAttributes> {
     },
     allowNull: false,
   })
-  // @ts-ignore
-  @HasMany(() => Category, categoryID)
   declare categoryID: string
 
-  // @ts-ignore
+
   @CreatedAt
   declare createdAt: Date
 
-  // @ts-ignore
+
   @UpdatedAt
   declare updatedAt: Date
+
+  @BelongsTo(() => Service,'serviceID')
+  service!: Service
+
+  @BelongsTo(() => User,'clientID')
+  client!: User
+
+  @BelongsToMany(() => Category, () => ServiceCategory, 'categoryID','categoryID')
+  categoriesService!: Category[]
+
+  @BelongsToMany(() => Category, () => ReservaCategory, 'reservaID','categoryID')
+  categoriesReserva!: Category[]
+
 }
 
 export default Reserva

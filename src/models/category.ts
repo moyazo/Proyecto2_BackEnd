@@ -1,9 +1,11 @@
 import { CategoryAttributes } from '../types/models'
-import { Table, Model, DataType } from 'sequelize-typescript'
+import {Table, Model, DataType, Column, CreatedAt, UpdatedAt, BelongsToMany} from 'sequelize-typescript'
 import { Optional } from 'sequelize'
 import ServiceCategory from './servicecategory'
 import ReservaCategory from './reservacategory'
-// TODO: RELATION WITH OTHER MODELS
+import Reserva from "./reserva";
+import Service from "./service";
+
 
 interface CategoryCreationAttributes
   extends Optional<CategoryAttributes, 'id'> {}
@@ -14,7 +16,6 @@ interface CategoryCreationAttributes
   modelName: 'Category',
 })
 class Category extends Model<CategoryAttributes, CategoryCreationAttributes> {
-  // @ts-ignore
   @Column({
     allowNull: false,
     type: DataType.UUID,
@@ -25,7 +26,7 @@ class Category extends Model<CategoryAttributes, CategoryCreationAttributes> {
   })
   declare id: string
 
-  // @ts-ignore
+
   @Column({
     type: DataType.STRING,
     unique: true,
@@ -33,19 +34,19 @@ class Category extends Model<CategoryAttributes, CategoryCreationAttributes> {
   })
   declare name: string
 
-  // @ts-ignore
+
   @CreatedAt
   declare createdAt: Date
 
-  // @ts-ignore
+
   @UpdatedAt
   declare updatedAt: Date
-  // @ts-ignore
-  @BelongsToMany(() => Category, () => serviceCategories)
-  declare serviceCategories!: ServiceCategory[]
-  // @ts-ignore
-  @BelongsToMany(() => Reserva, () => reservaCategories)
-  declare reservaCategories!: ReservaCategory[]
+
+  @BelongsToMany(() => Service, () => ServiceCategory,'categoryID','serviceID')
+  services!: Service[]
+
+  @BelongsToMany(() => Reserva, () => ReservaCategory,'categoryID','reservaID')
+  reservas!: Reserva[]
 }
 
 export default Category

@@ -8,12 +8,14 @@ interface UserType {
 }
 
 interface UserAttributes {
-  id: string
-  name: string
-  email: string
-  password: string
-  userName: string
-  salt: string
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  userName: string;
+  salt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface ServiceType {

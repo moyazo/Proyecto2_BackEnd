@@ -5,6 +5,7 @@ import bodyParser from 'body-parser'
 // @ts-ignore
 import dotenv from 'dotenv'
 import db from './src/models/index'
+import authRoutes from './src/routes/auth'
 import userRoutes from './src/routes/user'
 
 const startApp = async () => {
@@ -18,11 +19,12 @@ const startApp = async () => {
       extended: true,
     })
   )
+  app.use('/auth', authRoutes)
   app.use('/users', userRoutes)
 
   try {
     // @ts-ignore
-    db.beforeSync({ force: false })
+    await db.sync()
     app.listen(port, () => {
       console.log('APP running on port ' + port)
     })

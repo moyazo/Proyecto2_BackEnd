@@ -1,28 +1,38 @@
 import db from '../models/index'
-import {UserControllerReturn} from "../types/controllers";
+import {UserControllerReturn, UserControllerReturnArray, UserControllerReturnDeleted} from "../types/controllers";
 import {UserType} from "../types/models";
 
 
 const getUserByEmail = async (email: string): Promise<UserControllerReturn> => {
+    const userToReturn = {
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        userName: '',
+        salt: '',
+    }
     let controllerReturn: UserControllerReturn = {
-        data: undefined, message: "", status: false
+        data: userToReturn, message: "", status: false
 
     }
     if(!email) {
-        controllerReturn.status = false
-        controllerReturn.data = undefined
         controllerReturn.message = 'Email no válido'
     } else {
         const user = await db.models.User.findOne({where: {email}})
 
         if(!user) {
-            controllerReturn.status = false
-            controllerReturn.data = undefined
             controllerReturn.message = 'No se encontró un usuario con ese email'
         } else {
+            userToReturn.id = user.dataValues.id
+            userToReturn.name = user.dataValues.name
+            userToReturn.email = user.dataValues.email
+            userToReturn.password = user.dataValues.password
+            userToReturn.userName = user.dataValues.userName
+            userToReturn.salt = user.dataValues.salt
 
             controllerReturn.status = true
-            controllerReturn.data = user.dataValues
+            controllerReturn.data = userToReturn
             controllerReturn.message = 'Usuario encontrado'
         }
     }
@@ -30,20 +40,26 @@ const getUserByEmail = async (email: string): Promise<UserControllerReturn> => {
     return controllerReturn
 }
 
-
-const getUsers = async (): Promise<UserControllerReturn> => {
-    let controllerReturn: UserControllerReturn = {
-        data: undefined, message: "", status: false
+const getUsers = async (): Promise<UserControllerReturnArray> => {
+    const userToReturn = {
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        userName: '',
+        salt: '',
+    }
+    let controllerReturn: UserControllerReturnArray = {
+        data: [userToReturn], message: "", status: false
 
     }
 
     const users = await db.models.User.findAll()
     if(!users) {
-        controllerReturn.status = false
-        controllerReturn.data = undefined
+
         controllerReturn.message = 'No se encontraron usuarios'
     } else {
-        const parseUsers = users.map(user => user.dataValues)
+        const parseUsers: UserType[] = users.map(user => user.dataValues)
         controllerReturn.status = true
         controllerReturn.data = parseUsers
         controllerReturn.message = 'Usuarios encontrados'
@@ -53,26 +69,36 @@ const getUsers = async (): Promise<UserControllerReturn> => {
 }
 
 const getUserById = async (userId: string): Promise<UserControllerReturn> => {
-    let controllerReturn: UserControllerReturn= {
-        status: false,
-        data: undefined,
-        message: ''
+    const userToReturn = {
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        userName: '',
+        salt: '',
+    }
+    let controllerReturn: UserControllerReturn = {
+        data: userToReturn, message: "", status: false
+
     }
 
     if(!userId) {
-        controllerReturn.status = false
-        controllerReturn.data = undefined
         controllerReturn.message = 'ID de usuario no válido'
     } else {
         const user = await db.models.User.findByPk(userId)
 
         if(!user) {
-            controllerReturn.status = false
-            controllerReturn.data = undefined
             controllerReturn.message = 'No se encontró un usuario con ese ID'
         } else {
+            userToReturn.id = user.dataValues.id
+            userToReturn.name = user.dataValues.name
+            userToReturn.email = user.dataValues.email
+            userToReturn.password = user.dataValues.password
+            userToReturn.userName = user.dataValues.userName
+            userToReturn.salt = user.dataValues.salt
+
             controllerReturn.status = true
-            controllerReturn.data = user.dataValues
+            controllerReturn.data = userToReturn
             controllerReturn.message = 'Usuario encontrado'
         }
     }
@@ -81,10 +107,17 @@ const getUserById = async (userId: string): Promise<UserControllerReturn> => {
 }
 
 const createUser = async (user: UserType): Promise<UserControllerReturn> => {
-    let controllerReturn: UserControllerReturn= {
-        status: false,
-        data: undefined,
-        message: ''
+    const userToReturn = {
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        userName: '',
+        salt: '',
+    }
+    let controllerReturn: UserControllerReturn = {
+        data: userToReturn, message: "", status: false
+
     }
 
     let dataNotundefined = false
@@ -94,25 +127,27 @@ const createUser = async (user: UserType): Promise<UserControllerReturn> => {
         }
     }
     if(dataNotundefined) {
-        controllerReturn.status = false
-        controllerReturn.data = undefined
         controllerReturn.message = 'Todos los campos son obligatorios'
         return controllerReturn
     } else {
         const userExists = await db.models.User.findOne({where: {email: user.email}})
         if(userExists) {
-            controllerReturn.status = false
-            controllerReturn.data = undefined
             controllerReturn.message = 'Ya existe un usuario con ese email'
         } else {
             const newUser = await db.models.User.create({user})
             if(!newUser) {
-                controllerReturn.status = false
-                controllerReturn.data = undefined
                 controllerReturn.message = 'No se pudo crear el usuario'
-            } else {
+            } else{
+                const user = await getUserById( newUser.dataValues.id)
+                userToReturn.id = user.data.id
+                userToReturn.name = user.data.name
+                userToReturn.email = user.data.email
+                userToReturn.password = user.data.password
+                userToReturn.userName = user.data.userName
+                userToReturn.salt = user.data.salt
+
                 controllerReturn.status = true
-                controllerReturn.data = newUser.dataValues
+                controllerReturn.data = userToReturn
                 controllerReturn.message = 'Usuario creado correctamente'
             }
         }
@@ -122,34 +157,37 @@ const createUser = async (user: UserType): Promise<UserControllerReturn> => {
 }
 
 const updateUser = async (userId: string, user: UserType): Promise<UserControllerReturn> => {
-    let controllerReturn: UserControllerReturn= {
-        status: false,
-        data: undefined,
-        message: ''
+    const userToReturn = {
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        userName: '',
+        salt: '',
+    }
+    let controllerReturn: UserControllerReturn = {
+        data: userToReturn, message: "", status: false
+
     }
 
     if(!userId) {
-        controllerReturn.status = false
-        controllerReturn.data = undefined
         controllerReturn.message = 'ID de usuario no válido'
     } else {
         const updatedUser = await db.models.User.update(user, {where: {id: userId}})
 
         if(updatedUser[0] === 0) {
-            controllerReturn.status = false
-            controllerReturn.data = undefined
             controllerReturn.message = 'No se encontró un usuario con ese ID'
         } else {
-            const userData = {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                password: user.password,
-                userName: user.userName,
-                salt: user.salt,
-            }
+            const user = await getUserById(userId)
+            userToReturn.id = user.data.id
+            userToReturn.name = user.data.name
+            userToReturn.email = user.data.email
+            userToReturn.password = user.data.password
+            userToReturn.userName = user.data.userName
+            userToReturn.salt = user.data.salt
+
             controllerReturn.status = true
-            controllerReturn.data = userData
+            controllerReturn.data = userToReturn
             controllerReturn.message = 'Usuario actualizado correctamente'
         }
     }
@@ -157,23 +195,19 @@ const updateUser = async (userId: string, user: UserType): Promise<UserControlle
     return controllerReturn
 }
 
-const deleteUser = async (userId: string): Promise<UserControllerReturn> => {
-    let controllerReturn: UserControllerReturn= {
+const deleteUser = async (userId: string): Promise<UserControllerReturnDeleted> => {
+    let controllerReturn: UserControllerReturnDeleted= {
         status: false,
-        data: undefined,
+        data: 0,
         message: ''
     }
 
     if(!userId) {
-        controllerReturn.status = false
-        controllerReturn.data = undefined
         controllerReturn.message = 'ID de usuario no válido'
     } else {
         const deletedUser = await db.models.User.destroy({where: {id: userId}})
 
         if(deletedUser === 0) {
-            controllerReturn.status = false
-            controllerReturn.data = undefined
             controllerReturn.message = 'No se encontró un usuario con ese ID'
         } else {
             controllerReturn.status = true
