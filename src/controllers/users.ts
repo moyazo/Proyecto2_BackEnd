@@ -219,4 +219,38 @@ const deleteUser = async (userId: string): Promise<UserControllerReturnDeleted> 
     return controllerReturn
 }
 
-export {getUserByEmail, getUsers, getUserById, createUser, updateUser, deleteUser}
+const toggleFollowCompany = async (clientdID: string, companyID: string) => {
+    const client = await getUserById(clientdID)
+    const company = await getUserById(companyID)
+
+    if(!company || !client) {
+        return {status: false, message: 'No se encontró el usuario'}
+    }
+
+    const followed = await db.models.ClientFollowedCompany.findOne(
+        {
+            where: {
+                clientID: client.data.id,
+                companyID: company.data.id
+            }
+        }
+    )
+    if(followed) {
+        const unfollow = await db.models.ClientFollowedCompany.destroy({
+            where:{
+                clientID: client.data.id,
+                companyID: company.data.id
+            }
+        })
+        return {status: false, message: 'El usuario dejó de seguir a la empresa'}
+    } else {
+        const newFollow = await db.models.ClientFollowedCompany.create({clientID: client.data.id, companyID: company.data.id})
+        if (!newFollow) {
+            return {status: false, message: 'No se pudo seguir a la empresa'}
+        } else {
+            return {status: true, message: 'Se siguió a la empresa correctamente'}
+        }
+    }
+}
+
+export {getUserByEmail, getUsers, getUserById, createUser, updateUser, deleteUser,toggleFollowCompany}

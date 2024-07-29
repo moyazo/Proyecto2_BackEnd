@@ -6,6 +6,7 @@ import {
     createUser,
     updateUser,
     deleteUser,
+    toggleFollowCompany
 } from '../controllers/users'
 
 // Get all users
@@ -79,6 +80,22 @@ router.delete('/:id', async ( req, res, next ) => {
             return res.status(403).json('Can not delete user')
         }
        res.status(200).json(user)
+    } catch ( e: any ) {
+        res.status(500).json(e.message)
+    }
+})
+
+router.post('/follow', async ( req, res, next ) => {
+    try {
+        const { clientID, companyID} = req.body
+        if( !clientID || !companyID ){
+            return res.status(403).json('clientID and companyID are required')
+        }
+        const followed = await toggleFollowCompany(clientID,companyID);
+        if(!followed) {
+            return res.status(403).json('Can not follow company')
+        }
+        res.status(200).json(followed)
     } catch ( e: any ) {
         res.status(500).json(e.message)
     }
