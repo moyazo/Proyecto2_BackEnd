@@ -6,7 +6,8 @@ import {
     createUser,
     updateUser,
     deleteUser,
-    toggleFollowCompany
+    toggleFollowCompany,
+    toggleFavoriteServcice
 } from '../controllers/users'
 
 // Get all users
@@ -100,5 +101,22 @@ router.post('/follow', async ( req, res, next ) => {
         res.status(500).json(e.message)
     }
 })
+
+router.post('/favorites', async ( req, res, next ) => {
+    try {
+        const { clientID, serviceID} = req.body
+        if( !clientID || !serviceID ){
+            return res.status(403).json('clientID and serviceID are required')
+        }
+        const added = await toggleFavoriteServcice(clientID,serviceID);
+        if(!added) {
+            return res.status(403).json('Can not add favorite')
+        }
+        res.status(200).json(added)
+    } catch ( e: any ) {
+        res.status(500).json(e.message)
+    }
+})
+
 
 export default router

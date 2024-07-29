@@ -1,6 +1,7 @@
 import db from '../models/index'
 import {UserControllerReturn, UserControllerReturnArray, UserControllerReturnDeleted} from "../types/controllers";
 import {UserType} from "../types/models";
+import {getServiceById} from "./services";
 
 
 const getUserByEmail = async (email: string): Promise<UserControllerReturn> => {
@@ -253,4 +254,42 @@ const toggleFollowCompany = async (clientdID: string, companyID: string) => {
     }
 }
 
-export {getUserByEmail, getUsers, getUserById, createUser, updateUser, deleteUser,toggleFollowCompany}
+const toggleFavoriteServcice = async (clientdID: string, serviceID: string) => {
+    const client = await getUserById(clientdID)
+    const service = await getServiceById(serviceID)
+
+    if(!service.status || !client.status) {
+        return {status: false, message: 'No se encontró el usuario o servicio'}
+    }
+
+    const foundFavorite = await db.models.UserServiceFavorite.findOne(
+        {
+            where: {
+                clientID: client.data.id,
+                serviceID: service.data.id
+            }
+        }
+    )
+    if(foundFavorite) {
+        const unfollow = await db.models.UserServiceFavorite.destroy({
+            where:{
+                clientID: client.data.id,
+                serviceID: service.data.id
+            }
+        })
+        return {status: true, message: 'Eliminado de favoritos'}
+    } else {
+        const newFollow = await db.models.UserServiceFavorite.create(
+            {
+                clientID: client.data.id,
+                serviceID: service.data.id
+            })
+        if (!newFollow) {
+            return {status: false, message: 'No se pudo añadir a favoritos'}
+        } else {
+            return {status: true, message: 'Añadido a favoritos'}
+        }
+    }
+}
+
+export {getUserByEmail, getUsers, getUserById, createUser, updateUser, deleteUser,toggleFollowCompany, toggleFavoriteServcice}
