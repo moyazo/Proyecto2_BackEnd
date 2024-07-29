@@ -1,5 +1,5 @@
-import {CategoryType, ServiceType, UserType} from "./models";
-import Reserva from "../models/reserva";
+import {CategoryType, ServiceType, UserType,ReservaType} from "./models";
+
 
 interface UserControllerReturn {
     status: boolean,

@@ -3,7 +3,7 @@ const router = Router()
 import {
     getReservas,
     getReservaById,
-    createReserva,
+    toggleReserva,
     updateReserva,
     deleteReserva,
 } from '../controllers/reservas'
@@ -12,7 +12,11 @@ import {
 // Get all reservas
 router.get('/', async ( req, res, next ) => {
     try {
-        const reservas = await getReservas();
+        const clientID = req.body.clientID
+        if(!clientID) {
+            return res.status(403).json('clientID is missing')
+        }
+        const reservas = await getReservas(clientID);
         if(!reservas.data) {
             res.status(403).json('Can not get reservas')
         }
@@ -26,7 +30,11 @@ router.get('/', async ( req, res, next ) => {
 // Get user by id
 router.get('/:id', async ( req, res, next ) => {
     try {
-        const reserva = await getReservaById(req.params.id);
+        const clientID = req.body.clientID
+        if(!clientID) {
+            return res.status(403).json('clientID is missing')
+        }
+        const reserva = await getReservaById(req.params.id,clientID);
         if(!reserva.data) {
             res.status(403).json('reserva not found')
         }
@@ -43,7 +51,7 @@ router.post('/', async ( req, res, next ) => {
         if(!req.body) {
             return res.status(403).json('Request body is missing')
         }
-        const reserva = await createReserva(req.body);
+        const reserva = await toggleReserva(req.body);
         if(!reserva.data) {
             return res.status(403).json('Can not get reserva')
         }
@@ -59,7 +67,7 @@ router.put('/:id', async ( req, res, next ) => {
         if(!req.body) {
             return res.status(403).json('Request body is missing')
         }
-        const reserva = await updateReserva(req.params.id, req.body);
+        const reserva = await updateReserva(req.body);
         if(!reserva.data) {
             return res.status(403).json('Can not update reserva')
         }

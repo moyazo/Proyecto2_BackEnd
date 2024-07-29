@@ -1,22 +1,25 @@
 import db from '../models/index'
 import {ReservaControllerReturn, ReservaControllerReturnArray, ReservaControllerReturnDeleted} from "../types/controllers";
 import {ReservaType} from "../types/models";
+import reserva from "../models/reserva";
 
 
-const getReservas = async (): Promise<ReservaControllerReturnArray> => {
+const getReservas = async (clientID: string): Promise<ReservaControllerReturnArray> => {
     const reservaToReturn = {
         id: '',
-        name: '',
-        description: '',
-        available: '',
+        serviceID: '',
+        clientID: '',
         categoryID: '',
-        companyID: '',
     }
     let controllerReturn: ReservaControllerReturnArray = {
         data: [reservaToReturn], message: "", status: false
 
     }
-    const reservas = await db.models.Reserva.findAll()
+    const reservas = await db.models.Reserva.findAll({
+        where:{
+            clientID
+        }
+    })
 
     if(!reservas) {
 
@@ -31,45 +34,7 @@ const getReservas = async (): Promise<ReservaControllerReturnArray> => {
     return controllerReturn
 }
 
-const getReservaById = async (reservaId: string): Promise<ReservaControllerReturn> => {
-    const reservaToReturn = {
-        id: '',
-        name: '',
-        description: '',
-        available: '',
-        categoryID: '',
-        companyID: '',
-    }
-    let controllerReturn: ReservaControllerReturn = {
-        data: reservaToReturn, message: "", status: false
-
-    }
-
-    if(!reservaId) {
-        controllerReturn.message = 'ID de reserva no válido'
-    } else {
-        const reserva = await db.models.Reserva.findByPk(reservaId)
-
-        if(!reserva) {
-            controllerReturn.message = 'No se encontró una reserva con ese ID'
-        } else {
-            reservaToReturn.id = reserva.dataValues.id
-            reservaToReturn.name = reserva.dataValues.name
-            reservaToReturn .description = reserva.dataValues.description
-            reservaToReturn.available = reserva.dataValues.available
-            reservaToReturn.categoryID = reserva.dataValues.categoryID
-            reservaToReturn.companyID = reserva.dataValues.companyID
-
-            controllerReturn.status = true
-            controllerReturn.data = reservaToReturn
-            controllerReturn.message = 'Reserva encontrada'
-        }
-    }
-
-    return controllerReturn
-}
-
-const createReserva = async (reserva: ReservaType): Promise<ReservaControllerReturn> => {
+const getReservaById = async (reservaId: string,clientID: string): Promise<ReservaControllerReturn> => {
     const reservaToReturn = {
         id: '',
         serviceID: '',
@@ -81,6 +46,44 @@ const createReserva = async (reserva: ReservaType): Promise<ReservaControllerRet
 
     }
 
+    if(!reservaId) {
+        controllerReturn.message = 'ID de reserva no válido'
+    } else {
+        const reserva = await db.models.Reserva.findOne({
+            where:{
+                id: reservaId,
+                clientID
+            }
+        })
+
+        if(!reserva) {
+            controllerReturn.message = 'No se encontró una reserva con ese ID'
+        } else {
+            reservaToReturn.id = reserva.dataValues.id
+            reservaToReturn.categoryID = reserva.dataValues.categoryID
+            reservaToReturn.clientID = reserva.dataValues.clientID
+            reservaToReturn.serviceID = reserva.dataValues.serviceID
+
+            controllerReturn.status = true
+            controllerReturn.data = reservaToReturn
+            controllerReturn.message = 'Reserva encontrada'
+        }
+    }
+
+    return controllerReturn
+}
+
+const toggleReserva = async (reserva: ReservaType): Promise<ReservaControllerReturn> => {
+    const reservaToReturn = {
+        id: '',
+        serviceID: '',
+        clientID: '',
+        categoryID: '',
+    }
+    let controllerReturn: ReservaControllerReturn = {
+        data: reservaToReturn, message: "", status: false
+
+    }
     let dataNotundefined = false
     for (const key in reserva) {
         if(key != undefined || key != '') {
@@ -90,11 +93,21 @@ const createReserva = async (reserva: ReservaType): Promise<ReservaControllerRet
     if(dataNotundefined) {
         controllerReturn.message = 'Todos los campos son obligatorios'
         return controllerReturn
-    } else {
-        const reservaExists = await db.models.Reserva.findOne({where: {name: reserva.name}})
+    }
+    else {
+        const reservaExists = await db.models.Reserva.findOne({
+            where: {
+                clientID: reserva.clientID,
+                serviceID: reserva.serviceID,
+                categoryID: reserva.categoryID
+            }
+        })
         if(reservaExists) {
-            controllerReturn.message = 'Ya existe una reserva con ese name'
-        } else {
+            await deleteReserva(reservaExists.dataValues.id);
+            controllerReturn.message = 'La reserva ha sido cancelada'
+            controllerReturn.status = true
+        }
+        else {
             const newReserva = await db.models.Reserva.create({
                 clientID: reserva.clientID,
                 categoryID: reserva.categoryID,
@@ -103,8 +116,9 @@ const createReserva = async (reserva: ReservaType): Promise<ReservaControllerRet
 
             if(!newReserva) {
                 controllerReturn.message = 'No se pudo crear el Servicio'
-            } else{
-                const reserva = await getReservaById( newReserva.dataValues.id)
+            }
+            else{
+                const reserva = await getReservaById( newReserva.dataValues.id, newReserva.dataValues.clientID)
                 reservaToReturn.id = reserva.data.id
                 reservaToReturn.clientID =  reserva.data.clientID
                 reservaToReturn.categoryID = reserva.data.categoryID
@@ -112,7 +126,7 @@ const createReserva = async (reserva: ReservaType): Promise<ReservaControllerRet
 
                 controllerReturn.status = true
                 controllerReturn.data = reservaToReturn
-                controllerReturn.message = 'Reserva creada correctamente'
+                controllerReturn.message = 'El servicio ha sido reservado correctamente'
             }
         }
     }
@@ -120,37 +134,37 @@ const createReserva = async (reserva: ReservaType): Promise<ReservaControllerRet
     return controllerReturn
 }
 
-const updateReserva = async (reservaId: string, reserva: ReservaType): Promise<ReservaControllerReturn> => {
+const updateReserva = async (reserva: ReservaType): Promise<ReservaControllerReturn> => {
     const reservaToReturn = {
         id: '',
-        name: '',
-        description: '',
-        available: '',
+        serviceID: '',
+        clientID: '',
         categoryID: '',
-        companyID: '',
     }
     let controllerReturn: ReservaControllerReturn = {
         data: reservaToReturn, message: "", status: false
 
     }
 
-    if(!reservaId) {
+    if(!reserva.id) {
         controllerReturn.message = 'ID de reserva no es válido'
     } else {
-        const updatedReserva = await db.models.Reserva.update(reserva, {where: {id: reservaId}})
+        const updatedReserva = await db.models.Reserva.update(reserva, {
+            where: {
+                id: reserva.id,
+                clientID: reserva.clientID,
+            }
+        })
 
         if(updatedReserva[0] === 0) {
             controllerReturn.message = 'No se encontró una Reserva con ese ID'
         } else {
-            const reserva = await getReservaById(reservaId)
-            reservaToReturn.id = reserva.data.id
-            reservaToReturn.name = reserva.data.name
-            reservaToReturn.id = reserva.data.id
-            reservaToReturn.name = reserva.data.name
-            reservaToReturn.description = reserva.data.description
-            reservaToReturn.available = reserva.data.available
-            reservaToReturn.categoryID = reserva.data.categoryID
-            reservaToReturn.companyID = reserva.data.companyID
+            const reservaByID = await getReservaById(reserva.id,reserva.clientID)
+            reservaToReturn.id = reservaByID.data.id
+            reservaToReturn.categoryID = reservaByID.data.categoryID
+            reservaToReturn.clientID = reservaByID.data.clientID
+            reservaToReturn.serviceID = reservaByID.data.serviceID
+
 
             controllerReturn.status = true
             controllerReturn.data = reservaToReturn
@@ -171,7 +185,11 @@ const deleteReserva = async (reservaId: string): Promise<ReservaControllerReturn
     if(!reservaId) {
         controllerReturn.message = 'ID de reserva no válido'
     } else {
-        const deletedReserva = await db.models.Reserva.destroy({where: {id: reservaId}})
+        const deletedReserva = await db.models.Reserva.destroy({
+            where: {
+                id: reservaId
+            }
+        })
 
         if(deletedReserva === 0) {
             controllerReturn.message = 'No se encontró una reserva con ese ID'
@@ -185,4 +203,4 @@ const deleteReserva = async (reservaId: string): Promise<ReservaControllerReturn
     return controllerReturn
 }
 
-export {getReservas, getReservaById, createReserva, updateReserva, deleteReserva}
+export {getReservas, getReservaById, toggleReserva, updateReserva, deleteReserva}
